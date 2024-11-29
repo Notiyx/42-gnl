@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/27 00:23:07 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/11/29 01:15:37 by tlonghin         ###   ########.fr       */
+/*   Created: 2024/11/29 05:02:12 by tlonghin          #+#    #+#             */
+/*   Updated: 2024/11/29 07:03:24 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
 	int	i;
 
@@ -38,20 +38,6 @@ int	ft_strchr(char *str, char c)
 	return (0);
 }
 
-char	*returned_data(char *line, char *buff, char *tmp)
-{
-	if (!buff || !line)
-	{
-		if (buff)
-			free(buff);
-		if (tmp)
-			free(tmp);
-		if (line)
-			free(line);
-		return (NULL);
-	}
-	return (line);
-}
 
 char	*ft_strjoin(char *s1, char *s2)
 {

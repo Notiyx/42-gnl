@@ -5,19 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 21:13:04 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/11/29 02:01:15 by tlonghin         ###   ########.fr       */
+/*   Created: 2024/11/29 05:02:12 by tlonghin          #+#    #+#             */
+/*   Updated: 2024/11/29 10:54:22 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	free_data(char	*buff, char *tmp)
+char	*set_data_or_free(int type, char *buff, char *tmp, char *line)
 {
-	if (buff[0])
+	if (buff && type == 0)
 		free(buff);
-	if (tmp[0])
+	if (tmp && type == 0)
 		free(tmp);
+	if (line && type == 0)
+		free(line);
+	if (!tmp && type == 1)
+	{
+		tmp = malloc(BUFFER_SIZE + 1);
+		if (!tmp)
+			return (set_data_or_free(0, buff, 0, line));
+	}
+	return (0);
+}
+
+char	*read_files(int fd, char *buff, char *tmp)
+{
+	size_t	bytes_read;
+	char	*new_buff;
+	
+	bytes_read = 0;
+	new_buff = buff;
+	while (!ft_strchr(new_buff, '\n'))
+	{
+		bytes_read = read(fd, tmp, BUFFER_SIZE);
+		if (bytes_read <= 0)
+			break ;
+		tmp[bytes_read] = '\0';
+		new_buff = ft_strjoin(new_buff, tmp);
+		if (!new_buff)
+		{
+			free(new_buff);
+			return (NULL);
+		}
+	}
+	if (bytes_read <= 0 && ft_strlen(new_buff) == 0)
+	{
+		return (NULL);
+	}
+	return (new_buff);
 }
 
 char	*set_lines(char *line, char *buff)
@@ -27,8 +63,6 @@ char	*set_lines(char *line, char *buff)
 
 	end = 0;
 	i = 0;
-	if (!buff)
-		return (NULL);
 	while (buff[end] && buff[end] != '\n')
 		end++;
 	end++;
@@ -49,64 +83,41 @@ char	*clear_buff(char *buff)
 	size_t	i;
 
 	i = 0;
-	if (!buff)
-		return (NULL);
 	while (buff[i] && buff[i] != '\n')
 		i++;
 	i++;
 	return (buff + i);
 }
 
-char	*read_files(int fd, char *tmp, char *buff)
-{
-	size_t	bytes_read;
-	char	*n_buff;
-
-	n_buff = buff;
-	bytes_read = 0;
-	while (!ft_strchr(n_buff, '\n'))
-	{
-		bytes_read = read(fd, tmp, BUFFER_SIZE);
-		if (bytes_read <= 0 || !n_buff)
-			break ;
-		tmp[bytes_read] = '\0';
-		n_buff = ft_strjoin(n_buff, tmp);
-	}
-	if (bytes_read < 1 && n_buff[0] == '\0')
-	{
-		free_data(n_buff, tmp);
-		return (NULL);
-	}
-	return (n_buff);
-}
-
 char	*get_next_line(int fd)
 {
 	static char	*buff;
-	char		*line;
 	char		*tmp;
+	char		*line;
 
-	line = 0;
-	if (!buff)
-		buff = malloc(BUFFER_SIZE + 1);
 	tmp = malloc(BUFFER_SIZE + 1);
-	if (!tmp || !buff || fd < 0 || BUFFER_SIZE < 1)
-	{
-		free_data(buff, tmp);
+	line = 0;
+	if (!tmp || fd < 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	}
-	buff = read_files(fd, tmp, buff);
 	if (!buff)
 	{
-		free(buff);
-		return (NULL);
+		buff = malloc(BUFFER_SIZE + 1);
+		if (!buff)
+			return (set_data_or_free(0, 0, tmp, 0));
 	}
+	buff = read_files(fd, buff, tmp);
+	if (!buff)
+		return (set_data_or_free(0, buff, tmp, 0));
 	line = set_lines(line, buff);
+	if (!line)
+		return (set_data_or_free(0, buff, tmp, 0));
 	buff = clear_buff(buff);
-	return (returned_data(line, buff, tmp));
+	if (!buff)
+		return (set_data_or_free(0, buff, tmp, line));
+	set_data_or_free(0, 0, tmp, 0);
+	return (line);
 }
-
-
+/* 
 int	main(void)
 {
 	int	fd;
@@ -135,6 +146,6 @@ int	main(void)
 	printf("lines 20 : %s", get_next_line(fd));
 	printf("lines 21 : %s", get_next_line(fd));
 	printf("lines 22 : %s", get_next_line(fd));
+	close(fd);
 	printf("lines 23 : %s", get_next_line(fd));
-					
-}
+} */
