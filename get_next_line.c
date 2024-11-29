@@ -117,35 +117,19 @@ char	*get_next_line(int fd)
 	set_data_or_free(0, 0, tmp, 0);
 	return (line);
 }
-/* 
+
 int	main(void)
 {
 	int	fd;
 	int	i;
+	char	*line;
 
 	i = 0;
 	fd = open("file.txt", O_RDONLY);
-	printf("lines 1 : %s", get_next_line(fd));
-	printf("lines 2 : %s", get_next_line(fd));
-	printf("lines 3 : %s", get_next_line(fd));
-	printf("lines 4 : %s", get_next_line(fd));
-	printf("lines 5 : %s", get_next_line(fd));
-	printf("lines 6 : %s", get_next_line(fd));
-	printf("lines 7 : %s", get_next_line(fd));
-	printf("lines 8 : %s", get_next_line(fd));
-	printf("lines 9 : %s", get_next_line(fd));
-	printf("lines 10 : %s", get_next_line(fd));
-	printf("lines 12 : %s", get_next_line(fd));
-	printf("lines 13 : %s", get_next_line(fd));
-	printf("lines 14 : %s", get_next_line(fd));
-	printf("lines 15 : %s", get_next_line(fd));
-	printf("lines 16 : %s", get_next_line(fd));
-	printf("lines 17 : %s", get_next_line(fd));
-	printf("lines 18 : %s", get_next_line(fd));
-	printf("lines 19 : %s", get_next_line(fd));
-	printf("lines 20 : %s", get_next_line(fd));
-	printf("lines 21 : %s", get_next_line(fd));
-	printf("lines 22 : %s", get_next_line(fd));
+	while ((line = get_next_line(fd)))
+	{
+		printf("line %02d: %s", i++, line);
+		free(line);
+	}
 	close(fd);
-	printf("lines 23 : %s", get_next_line(fd));
-} */
+}
