@@ -6,130 +6,129 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 05:02:12 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/11/29 10:54:22 by tlonghin         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:04:51 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*set_data_or_free(int type, char *buff, char *tmp, char *line)
+char	*ft_free(char *buffer, char *buf)
 {
-	if (buff && type == 0)
-		free(buff);
-	if (tmp && type == 0)
-		free(tmp);
-	if (line && type == 0)
-		free(line);
-	if (!tmp && type == 1)
-	{
-		tmp = malloc(BUFFER_SIZE + 1);
-		if (!tmp)
-			return (set_data_or_free(0, buff, 0, line));
-	}
-	return (0);
+	char	*temp;
+
+	temp = ft_strjoin(buffer, buf);
+	free(buffer);
+	return (temp);
 }
 
-char	*read_files(int fd, char *buff, char *tmp)
+char	*ft_next(char *buffer)
 {
-	size_t	bytes_read;
-	char	*new_buff;
-	
-	bytes_read = 0;
-	new_buff = buff;
-	while (!ft_strchr(new_buff, '\n'))
-	{
-		bytes_read = read(fd, tmp, BUFFER_SIZE);
-		if (bytes_read <= 0)
-			break ;
-		tmp[bytes_read] = '\0';
-		new_buff = ft_strjoin(new_buff, tmp);
-		if (!new_buff)
-		{
-			free(new_buff);
-			return (NULL);
-		}
-	}
-	if (bytes_read <= 0 && ft_strlen(new_buff) == 0)
-	{
-		return (NULL);
-	}
-	return (new_buff);
-}
+	int		i;
+	int		j;
+	char	*line;
 
-char	*set_lines(char *line, char *buff)
-{
-	size_t	i;
-	size_t	end;
-
-	end = 0;
 	i = 0;
-	while (buff[end] && buff[end] != '\n')
-		end++;
-	end++;
-	line = malloc(sizeof(char) * (end + 1));
-	if (!line)
-		return (NULL);
-	while (i < end)
-	{
-		line[i] = buff[i];
+	while (buffer[i] && buffer[i] != '\n')
 		i++;
+	if (!buffer[i])
+	{
+		free(buffer);
+		return (NULL);
 	}
-	line[i] = '\0';
+	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	i++;
+	j = 0;
+	while (buffer[i])
+		line[j++] = buffer[i++];
+	free(buffer);
 	return (line);
 }
 
-char	*clear_buff(char *buff)
+char	*ft_line(char *buffer)
 {
-	size_t	i;
+	char	*line;
+	int		i;
 
 	i = 0;
-	while (buff[i] && buff[i] != '\n')
+	if (!buffer[i])
+		return (NULL);
+	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	i++;
-	return (buff + i);
+	line = ft_calloc(i + 2, sizeof(char));
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
+	{
+		line[i] = buffer[i];
+		i++;
+	}
+	if (buffer[i] && buffer[i] == '\n')
+		line[i++] = '\n';
+	return (line);
+}
+
+char	*read_file(int fd, char *res)
+{
+	char	*buffer;
+	int		byte_read;
+
+	if (!res)
+		res = ft_calloc(1, 1);
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	byte_read = 1;
+	while (byte_read > 0)
+	{
+		byte_read = read(fd, buffer, BUFFER_SIZE);
+		if (byte_read == -1)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		buffer[byte_read] = 0;
+		res = ft_free(res, buffer);
+		if (ft_strchr(buffer, '\n'))
+			break ;
+	}
+	free(buffer);
+	return (res);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buff;
-	char		*tmp;
+	static char	*buffer;
 	char		*line;
 
-	tmp = malloc(BUFFER_SIZE + 1);
-	line = 0;
-	if (!tmp || fd < 0 || read(fd, 0, 0) < 0)
+	// printf("fd : %i \n", fd);
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	if (!buff)
-	{
-		buff = malloc(BUFFER_SIZE + 1);
-		if (!buff)
-			return (set_data_or_free(0, 0, tmp, 0));
-	}
-	buff = read_files(fd, buff, tmp);
-	if (!buff)
-		return (set_data_or_free(0, buff, tmp, 0));
-	line = set_lines(line, buff);
-	if (!line)
-		return (set_data_or_free(0, buff, tmp, 0));
-	buff = clear_buff(buff);
-	if (!buff)
-		return (set_data_or_free(0, buff, tmp, line));
-	set_data_or_free(0, 0, tmp, 0);
+	buffer = read_file(fd, buffer);
+	if (!buffer)
+		return (NULL);
+	line = ft_line(buffer);
+	buffer = ft_next(buffer);
 	return (line);
 }
 
-int	main(void)
-{
-	int	fd;
-	int	i;
-	char	*line;
+// int	main(void)
+// {
+// 	int	fd;
+// 	int	i;
+// 	char	*line;
 
-	i = 0;
-	fd = open("file.txt", O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		printf("line %02d: %s", i++, line);
-		free(line);
-	}
-	close(fd);
-}
+// 	i = 0;
+// 	fd = open("file.txt", O_RDONLY);
+// 	if (BUFFER_SIZE > 100) {
+// 		char *temp;
+// 		do {
+// 			temp = get_next_line(fd);
+// 			free(temp);
+// 		} while (temp != NULL);
+// 	}
+// 	close(fd);
+// 	fd = open("file.txt", O_RDONLY);
+// 	while ((line = get_next_line(fd)))
+// 	{
+// 		printf("line %02d: %s", i++, line);
+// 		free(line);
+// 	}
+// 	close(fd);
+// }
