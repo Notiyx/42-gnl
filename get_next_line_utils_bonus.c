@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:37:43 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/12/04 02:08:08 by tlonghin         ###   ########.fr       */
+/*   Updated: 2024/12/04 22:04:28 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[j])
 		join[i++] = s2[j++];
 	join[i] = '\0';
+	free(s1);
 	return (join);
 }
 

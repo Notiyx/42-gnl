@@ -6,20 +6,11 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:37:37 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/12/04 02:23:18 by tlonghin         ###   ########.fr       */
+/*   Updated: 2024/12/04 22:04:39 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-char	*ft_set_data(char *buff, char *tmp)
-{
-	char	*new;
-
-	new = ft_strjoin(buff, tmp);
-	free(buff);
-	return (new);
-}
 
 char	*read_files(int fd, char *buffer)
 {
@@ -41,7 +32,7 @@ char	*read_files(int fd, char *buffer)
 			return (NULL);
 		}
 		tmp[bytes_read] = '\0';
-		buffer = ft_set_data(buffer, tmp);
+		buffer = ft_strjoin(buffer, tmp);
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
