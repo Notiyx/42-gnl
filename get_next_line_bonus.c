@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:37:37 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/12/04 02:23:22 by tlonghin         ###   ########.fr       */
+/*   Updated: 2024/12/04 02:23:18 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,26 +104,26 @@ char	*clear_data(char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer = 0;
+	static char	*buffer[4096];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 	{
-		free(buffer);
-		buffer = 0;
+		free(buffer[fd]);
+		buffer[fd] = 0;
 		return (NULL);
 	}
-	buffer = read_files(fd, buffer);
-	if (!buffer)
+	buffer[fd] = read_files(fd, buffer[fd]);
+	if (!buffer[fd])
 		return (NULL);
-	line = set_lines(buffer);
+	line = set_lines(buffer[fd]);
 	if (!line)
 	{
-		free(buffer);
-		buffer = 0;
+		free(buffer[fd]);
+		buffer[fd] = 0;
 		return (NULL);
 	}
-	buffer = clear_data(buffer);
+	buffer[fd] = clear_data(buffer[fd]);
 	return (line);
 }
 
