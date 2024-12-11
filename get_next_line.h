@@ -6,12 +6,16 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 09:29:51 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/12/04 02:10:25 by tlonghin         ###   ########.fr       */
+/*   Updated: 2024/12/09 23:40:43 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
 
 # include <sys/types.h>
 # include <sys/stat.h>
