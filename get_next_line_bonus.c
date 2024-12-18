@@ -6,11 +6,11 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:37:37 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/12/11 00:06:20 by tlonghin         ###   ########.fr       */
+/*   Updated: 2024/12/18 02:56:40 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*read_files(int fd, char *buffer)
 {
@@ -124,7 +124,7 @@ char	*get_next_line(int fd)
 	int i;
 	char *line;
 	i = 0;
-	fd = open("file.txt", O_RDONLY);
+	fd = open("test.ber", O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
 		printf("line %02d: %s", i++, line);

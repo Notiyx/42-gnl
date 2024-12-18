@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:37:37 by tlonghin          #+#    #+#             */
-/*   Updated: 2024/12/11 00:06:14 by tlonghin         ###   ########.fr       */
+/*   Updated: 2024/12/18 02:58:38 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,14 +117,14 @@ char	*get_next_line(int fd)
 	buffer = clear_data(buffer);
 	return (line);
 }
-/* 
-int main(void)
+
+/* int main(void)
 {
 	int fd;
 	int i;
 	char *line;
 	i = 0;
-	fd = open("file.txt", O_RDONLY);
+	fd = open("ff", O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
 		printf("line %02d: %s", i++, line);
